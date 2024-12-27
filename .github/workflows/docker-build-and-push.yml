@@ -38,8 +38,8 @@ jobs:
         run: |
           IMAGE_TAG="${COMMIT_HASH:0:7}"  # Truncate commit hash to 7 characters
           echo "Building Docker image with commit hash tag: $IMAGE_TAG"
-          docker build -t $ECR_REGISTRY/nodejs-mongo-app:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/nodejs-mongo-app:$IMAGE_TAG
+          docker build -t $ECR_REGISTRY/nodejscrud:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/nodejscrud:$IMAGE_TAG
 
       - name: Update Helm Chart with new image tag
         env:
@@ -48,7 +48,7 @@ jobs:
           COMMIT_HASH: ${{ github.sha }}  # Git commit hash
         run: |
           IMAGE_TAG="${COMMIT_HASH:0:7}"  # Use the same commit hash format here
-          sed -i 's|<DOCKER_IMAGE>|$ECR_REGISTRY/nodejs-mongo-app:$IMAGE_TAG|' helm/nodejs-mongo-app/values.yaml
-          git add helm/nodejs-mongo-app/values.yaml
+          sed -i 's|<DOCKER_IMAGE>|$ECR_REGISTRY/nodejscrud:$IMAGE_TAG|' helm/nodejs-mongo-crud/values.yaml
+          git add helm/nodejs-mongo-crud/values.yaml
           git commit -m "Update Helm chart with new image tag $IMAGE_TAG"
           git push origin main
