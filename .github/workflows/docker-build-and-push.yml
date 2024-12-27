@@ -29,18 +29,26 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      # Build and tag the Docker image
-      - name: Build Docker image
+      
+      - name: Build and push Docker image to ECR
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}  # ECR repository URL
+          COMMIT_HASH: ${{ github.sha }}  # Git commit hash
         run: |
-          IMAGE_TAG=latest
-          REPO_URI=651706756624.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nodejscrud
-          docker build -t $REPO_URI:$IMAGE_TAG .
-          echo "Built Docker image $REPO_URI:$IMAGE_TAG"
+          IMAGE_TAG="${COMMIT_HASH:0:7}"  # Truncate commit hash to 7 characters
+          echo "Building Docker image with commit hash tag: $IMAGE_TAG"
+          docker build -t $ECR_REGISTRY/nodejs-mongo-app:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/nodejs-mongo-app:$IMAGE_TAG
 
-      # Push the Docker image to ECR
-      - name: Push Docker image to ECR
+      - name: Update Helm Chart with new image tag
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}  # ECR repository URL
+          COMMIT_HASH: ${{ github.sha }}  # Git commit hash
         run: |
-          IMAGE_TAG=latest
-          REPO_URI=651706756624.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nodejscrud
-          docker push $REPO_URI:$IMAGE_TAG
-          echo "Pushed Docker image to ECR: $REPO_URI:$IMAGE_TAG"
+          IMAGE_TAG="${COMMIT_HASH:0:7}"  # Use the same commit hash format here
+          sed -i 's|<DOCKER_IMAGE>|$ECR_REGISTRY/nodejs-mongo-app:$IMAGE_TAG|' helm/nodejs-mongo-app/values.yaml
+          git add helm/nodejs-mongo-app/values.yaml
+          git commit -m "Update Helm chart with new image tag $IMAGE_TAG"
+          git push origin main

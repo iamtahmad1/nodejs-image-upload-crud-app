@@ -3,10 +3,8 @@
 replicaCount: 1
 
 image:
-  repository: "651706756624.dkr.ecr.ap-south-1.amazonaws.com/nodejscrud"
+  DOCKER_IMAGE: "abc.dkr.ecr.ap-south-1.amazonaws.com/nodejscrud:latest"
   pullPolicy: IfNotPresent
-  tag: "latest"  # You can set this dynamically to $GITHUB_SHA in your CI pipeline
-
 service:
   type: LoadBalancer
   port: 80

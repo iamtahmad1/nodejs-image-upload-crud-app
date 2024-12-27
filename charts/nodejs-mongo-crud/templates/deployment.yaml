@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: nodejs-mongo-app
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.DOCKER_IMAGE }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.nodePort }}
