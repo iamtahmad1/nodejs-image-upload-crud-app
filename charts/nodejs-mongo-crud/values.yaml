@@ -3,7 +3,7 @@
 replicaCount: 1
 
 image:
-  DOCKER_IMAGE: " 651706756624.dkr.ecr.ap-south-1.amazonaws.com/nodejscrud:8712f53"
+  DOCKER_IMAGE: "651706756624.dkr.ecr.ap-south-1.amazonaws.com/nodejscrud:c2be1dc"
   pullPolicy: IfNotPresent
 service:
   type: LoadBalancer
