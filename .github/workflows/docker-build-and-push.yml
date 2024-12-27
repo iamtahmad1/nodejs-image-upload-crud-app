@@ -1,0 +1,46 @@
+name: Build and Push Docker Image to ECR
+
+on:
+  push:
+    branches:
+      - main # Trigger on pushes to the main branch
+  pull_request:
+
+jobs:
+  build-and-push:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Set up AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # Log in to ECR
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # Build and tag the Docker image
+      - name: Build Docker image
+        run: |
+          IMAGE_TAG=latest
+          REPO_URI=651706756624.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nodejscrud
+          docker build -t $REPO_URI:$IMAGE_TAG .
+          echo "Built Docker image $REPO_URI:$IMAGE_TAG"
+
+      # Push the Docker image to ECR
+      - name: Push Docker image to ECR
+        run: |
+          IMAGE_TAG=latest
+          REPO_URI=651706756624.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/nodejscrud
+          docker push $REPO_URI:$IMAGE_TAG
+          echo "Pushed Docker image to ECR: $REPO_URI:$IMAGE_TAG"

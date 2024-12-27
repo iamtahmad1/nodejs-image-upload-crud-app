@@ -3,7 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const app = express();
-const PORT = process.env.PORT || 5500;
+const PORT = process.env.PORT || 5000;
+const DB_URI =  process.env.DB_URI || 'mongodb://root:password@abc:27017';
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -18,8 +19,7 @@ app.use(
 );
 
 // Database connection
-mongoose
-  .connect(process.env.DB_URI, {
+mongoose.connect(DB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
