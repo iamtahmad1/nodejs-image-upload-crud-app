@@ -7,14 +7,11 @@ WORKDIR /app
 # Copy package.json and package-lock.json (if exists) for dependencies
 COPY package*.json ./
 
-# Install dependencies (in a separate layer to leverage caching)
+# Install dependencies (production-only)
 RUN npm install --production
 
 # Copy the rest of the application
 COPY . .
-
-# Build your application if necessary (e.g., for React/Vue, etc.)
-# RUN npm run build (skip if not needed)
 
 # Start a new stage for the production image
 FROM node:18-alpine
@@ -28,5 +25,5 @@ COPY --from=build /app /app
 # Expose port
 EXPOSE 5000
 
-# Start the application
-CMD ["npm", "start"]
+# Start the application (using node in production)
+CMD ["node", "main.js"]
