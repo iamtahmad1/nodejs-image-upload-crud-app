@@ -1,0 +1,24 @@
+# Default values for nodejs-mongo-app.
+
+replicaCount: 1
+
+image:
+  repository: "651706756624.dkr.ecr.ap-south-1.amazonaws.com/nodejscrud"
+  pullPolicy: IfNotPresent
+  tag: "latest"  # You can set this dynamically to $GITHUB_SHA in your CI pipeline
+
+service:
+  type: LoadBalancer
+  port: 80
+
+ingress:
+  enabled: false
+
+resources: {}
+  # Limits and requests for CPU and memory can be set here
+
+env:
+  MONGO_URI: "mongodb://root:password@mongo-service.default.svc.cluster.local:27017"  # Replace with your MongoDB URI
+
+# Node.js specific environment variables and configurations
+nodePort: 5000  # The port your app runs on inside the container

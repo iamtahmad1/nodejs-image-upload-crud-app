@@ -1,0 +1,5 @@
+apiVersion: v2
+name: nodejs-mongo-app
+description: A Helm chart for deploying a Node.js CRUD app with MongoDB
+version: 0.1.0
+appVersion: "1.0.0"
