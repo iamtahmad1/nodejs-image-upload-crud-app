@@ -49,6 +49,8 @@ jobs:
         run: |
           IMAGE_TAG="${COMMIT_HASH:0:7}"  # Use the same commit hash format here
           sed -i 's|<DOCKER_IMAGE>|$ECR_REGISTRY/nodejscrud:$IMAGE_TAG|' charts/nodejs-mongo-crud/values.yaml
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git add charts/nodejs-mongo-crud/values.yaml
           git commit -m "Update Helm chart with new image tag $IMAGE_TAG"
           git push origin main
