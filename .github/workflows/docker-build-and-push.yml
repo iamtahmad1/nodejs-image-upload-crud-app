@@ -48,7 +48,7 @@ jobs:
           COMMIT_HASH: ${{ github.sha }}  # Git commit hash
         run: |
           IMAGE_TAG="${COMMIT_HASH:0:7}"  # Use the same commit hash format here
-          sed -i "s|DOCKER_IMAGE: \".*\"|DOCKER_IMAGE: \"${ECR_URL}/nodejscrud:$ $IMAGE_TAG\"|" charts/nodejs-mongo-crud/values.yaml
+          sed -i "s|DOCKER_IMAGE: \".*\"|DOCKER_IMAGE: \"${ECR_REGISTRY}/nodejscrud:$IMAGE_TAG\"|" charts/nodejs-mongo-crud/values.yaml
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add charts/nodejs-mongo-crud/values.yaml
