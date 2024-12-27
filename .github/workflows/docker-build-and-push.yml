@@ -52,5 +52,5 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add charts/nodejs-mongo-crud/values.yaml
-          git commit -m "Update Helm chart with new image tag $IMAGE_TAG"
+          git commit -am "Update Helm chart with new image tag $IMAGE_TAG"
           git push origin main
